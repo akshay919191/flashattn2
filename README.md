@@ -17,7 +17,7 @@ The forward kernel supports **dense and causal attention, GQA/MQA and unequal qu
 
 ## Kernel Performance
 
-**RTX 3050 6 GB Laptop (GA107, sm_86), PyTorch 2.7.1+cu118, CUDA 11.8.** Batch size 1, eight Q/KV heads, head dimension 64. SDPA backend `auto`. FP16 inputs, FP32 accumulation; median of timed runs with an L2 flush before each run.
+**RTX 3050 6 GB Laptop (GA107, sm_86), PyTorch 2.7.1+cu118, CUDA 11.8.** Batch size 1, eight Q/KV heads, head dimension 64. SDPA backend `auto`. FP16 inputs, FP32 accumulation. Each reported latency is the median across three full sweeps; each sweep uses the median of timed calls with an L2 flush between calls.
 
 TFLOP/s is `4·B·H·N²·D` FLOPs (halved for causal) divided by the median latency.
 
@@ -27,20 +27,20 @@ Execution time (ms), lower is better:
 
 | Mask | Sequence length | Custom | SDPA |
 |---|---:|---:|---:|
-| Dense | 1024 | TBD | TBD |
-| Dense | 2048 | TBD | TBD |
-| Dense | 4096 | TBD | TBD |
-| Dense | 8192 | TBD | TBD |
-| Dense | 16384 | TBD | TBD |
-| Dense | 32768 | TBD | TBD |
-| Causal | 1024 | TBD | TBD |
-| Causal | 2048 | TBD | TBD |
-| Causal | 4096 | TBD | TBD |
-| Causal | 8192 | TBD | TBD |
-| Causal | 16384 | TBD | TBD |
-| Causal | 32768 | TBD | TBD |
+| Dense | 1024 | 0.156 | 0.178 |
+| Dense | 2048 | 0.482 | 0.525 |
+| Dense | 4096 | 1.892 | 1.910 |
+| Dense | 8192 | 7.726 | 7.656 |
+| Dense | 16384 | 31.151 | 30.790 |
+| Dense | 32768 | 124.405 | 124.677 |
+| Causal | 1024 | 0.095 | 0.115 |
+| Causal | 2048 | 0.294 | 0.329 |
+| Causal | 4096 | 1.054 | 1.128 |
+| Causal | 8192 | 4.152 | 4.261 |
+| Causal | 16384 | 17.371 | 16.881 |
+| Causal | 32768 | 72.574 | 67.523 |
 
-The full sweep covers **108 cases**: head dimension 64/128/256, 8/16/32 heads, sequence lengths 1024 to 32768, dense and causal. Custom throughput spans **TBD TFLOP/s for dense** and **TBD TFLOP/s for causal** attention.
+The full sweep covers **108 cases**: head dimension 64/128/256, 8/16/32 heads, sequence lengths 1024 to 32768, dense and causal. Custom throughput spans **13.80–18.16 TFLOP/s for dense** and **11.28–16.55 TFLOP/s for causal** attention, using the per-case median latency across three full sweeps.
 
 [All cases](benchmarks/results/fwd.csv)
 
