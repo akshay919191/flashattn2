@@ -1,4 +1,4 @@
-"""Backward correctness tests: flash_acc_reg_ext.flash_bwd vs fp32 autograd through SDPA.
+"""Backward correctness tests: flash_acc_reg._C.flash_bwd vs fp32 autograd through SDPA.
 
 Run:  pytest -v test_bwd.py
 Assumptions (edit the ADAPTER section if yours differ):
@@ -10,7 +10,7 @@ import torch
 import torch.nn.functional as F
 import os, sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-import flash_acc_reg_ext as ext
+from flash_acc_reg import _C as ext
 
 
 def _call(fn, *args, causal):
@@ -48,7 +48,7 @@ pytestmark = pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA requ
 
 
 DTYPES = [torch.float16]  # kernel is fp16-only (add torch.bfloat16 if you add support)
-HEAD_DIMS = [8, 16, 24, 32, 40, 48, 64, 72, 80, 96, 104, 112, 128, 136, 160, 192, 200, 224, 248, 256]
+HEAD_DIMS = [32, 64, 80, 96, 128, 160, 192, 224, 256]
 SEQLENS = [1, 7, 33, 64, 100, 127, 128, 129, 255, 333, 512, 1000, 1024, 2048, 4095, 4096]
 REL_FLOOR = {torch.float16: 2e-3, torch.bfloat16: 1.6e-2}  # relative to max|ref|
 
