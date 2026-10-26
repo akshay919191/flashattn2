@@ -1,12 +1,10 @@
-# CUDA-enabled PyTorch from the akku environment.
 --extra-index-url https://download.pytorch.org/whl/cu118
 torch==2.7.1+cu118
 
-# Build dependencies for the CUDA extension.
 setuptools==84.0.0
 wheel==0.48.0
 ninja==1.13.0
+packaging>=23.0
 
-# Test and plotting dependencies used by this repository.
 pytest==9.1.1
 matplotlib==3.10.8

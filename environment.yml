@@ -1,0 +1,16 @@
+name: akku
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - --extra-index-url https://download.pytorch.org/whl/cu118
+      - torch==2.7.1+cu118
+      - setuptools==84.0.0
+      - wheel==0.48.0
+      - ninja==1.13.0
+      - packaging>=23.0
+      - pytest==9.1.1
+      - matplotlib==3.10.8
