@@ -2,7 +2,7 @@
 
 FlashAttention-2 forward kernels written from scratch in **CUDA C++ with inline PTX**, tuned for Ampere (developed on an **RTX 3050 6 GB Laptop**, sm_86).
 
-Benchmarks compare kernel latency and throughput against **PyTorch SDPA** across head dimensions, head counts and sequence lengths up to 32K. This is a learning and profiling project, not a replacement for PyTorch SDPA or the official FlashAttention libraries.
+Benchmarks compare kernel latency and throughput against **PyTorch SDPA** across head dimensions, head counts and sequence lengths up to 32K.
 
 ## Implementation
 
@@ -170,7 +170,6 @@ All tensors must be contiguous. `H_kv` must divide `H`: `H_kv == H` is standard 
 | Cross-attention | Supported (`Sq ≠ Skv`) |
 | Sequence lengths | Any positive `Sq`, `Skv` (ragged tiles handled) |
 | Head dimension | `{32, 64, 80, 96, 128, 160, 192, 224, 256}` |
-| BF16, dropout, variable-length sequences | Not implemented |
 
 Causal masking is aligned to the bottom-right corner: query row `i` attends to keys `0 … i + (Skv − Sq)`, matching FlashAttention-2. For `Sq == Skv` this is the usual lower-triangular mask. When `Sq > Skv`, the leading query rows have no visible key and their output is NaN.
 
