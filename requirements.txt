@@ -1,0 +1,14 @@
+# Python 3.10; requires CUDA Toolkit 11.8 (nvcc) and an NVIDIA GPU (compute capability 8.0+).
+--extra-index-url https://download.pytorch.org/whl/cu118
+
+# Runtime dependency, pinned to the akku environment used for this project.
+torch==2.7.1+cu118
+
+# CUDA extension build tools from pyproject.toml.
+setuptools==84.0.0
+wheel==0.48.0
+ninja==1.13.0
+
+# Test and benchmark plotting dependencies.
+pytest==9.1.1
+matplotlib==3.10.8
