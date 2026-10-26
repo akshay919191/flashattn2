@@ -103,18 +103,23 @@ python -m benchmarks.plot_bwd --csv benchmarks/results/bwd.csv --batch 1 --heads
 
 ### Requirements
 
-- Linux, NVIDIA GPU with compute capability 8.0 or newer.
-- CUDA Toolkit with `nvcc` on `PATH`, matching the CUDA version used by your PyTorch install.
-- Python 3.9+ and a CUDA-enabled PyTorch install.
+- Ubuntu or Debian with `sudo`, Conda on `PATH`, and the NVIDIA CUDA apt repository configured.
+- NVIDIA GPU with compute capability 8.0 or newer. `setup_env.sh` targets sm_86 by default; change `TORCH_CUDA_ARCH_LIST` in the script for another GPU.
+- The setup script installs GCC 11 and CUDA Toolkit 11.8, then creates the Python 3.10 `akku` environment.
 - Tested: Python 3.10, PyTorch 2.7.1+cu118, CUDA 11.8, RTX 3050 6GB Laptop.
 
 ### Install
 
+The setup script installs the system packages, creates the Conda environment, installs Python dependencies, and builds the CUDA extension. It uses `sudo` to install apt packages.
+
 ```bash
 git clone https://github.com/akshay919191/flashattn-V1.git
 cd flashattn-V1
-pip install -e . --no-build-isolation
+bash setup_env.sh
+conda activate akku
 ```
+
+`environment.yml` defines the Conda environment, and `requirements.txt` lists the Python dependencies.
 
 ### Smoke test
 
@@ -294,13 +299,18 @@ flashattn-V1/
 
 | Variable | Default | Effect |
 |---|---|---|
-| `TORCH_CUDA_ARCH_LIST` | Detected from GPU | Target arch(s), e.g. `"8.0;8.6"` |
+| `TORCH_CUDA_ARCH_LIST` | Detected from GPU by `setup.py`; `setup_env.sh` sets `"8.6"` | Target arch(s), e.g. `"8.0;8.6"` |
 | `FLASH_DEBUG` | `0` | `1` → `-O0 -G` for `compute-sanitizer` / `cuda-gdb` |
 | `FLASH_FAST_MATH` | `1` | `0` → disable `--use_fast_math` |
 
 ## Clean rebuild
 
 ```bash
+conda activate akku
+export CUDA_HOME=/usr/local/cuda-11.8
+export PATH="$CUDA_HOME/bin:$PATH"
+export CUDAHOSTCXX=/usr/bin/g++-11
+export TORCH_CUDA_ARCH_LIST="8.6"  # change this for a different GPU
 pip uninstall -y flash-acc-reg
 rm -rf build *.egg-info
 find . -name '*.so' -delete
